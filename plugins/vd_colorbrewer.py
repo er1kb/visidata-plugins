@@ -82,7 +82,7 @@ def colorbrewer(sheet):
     vd.option('plot_colors', plot_colors, 'list of distinct colors to use for plotting distinct objects')
     sheet.reload()
 
-GraphSheet.addCommand(None, 'colorbrewer', 'sheet.colorbrewer()')
+GraphSheet.addCommand('c', 'colorbrewer', 'sheet.colorbrewer()')
 GraphSheet.addCommand(None, 'reset_colors', 'vd.option("plot_colors", "green red yellow cyan magenta white 38 136 168", "list of distinct colors to use for plotting distinct objects"); sheet.reload()')
 
 
