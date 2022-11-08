@@ -23,11 +23,12 @@ from visidata import vd, GraphSheet
 import os
 import re
 import sys
+import time
 import requests
 import importlib.util
 
 if not os.path.exists(os.path.join(os.getcwd(), 'colorbrewer.py')):
-    url = 'https://raw.githubusercontent.com/dsc/colorbrewer-python/master/colorbrewer.py'
+    url = 'https://raw.githubusercontent.com/er1kb/colorbrewer-python/master/colorbrewer.py'
     c = requests.get(url, stream = True).content
     with open('colorbrewer.py', 'wb') as f:
         c = '\n'.join([l for i,l in enumerate(c.decode('utf-8').split('\n')) if i not in [173,174,356,357,358]])
@@ -42,7 +43,7 @@ spec.loader.exec_module(cb)
 
 
 if not os.path.exists(os.path.join(os.getcwd(), 'colortrans.py')):
-    url = 'https://gist.githubusercontent.com/MicahElliott/719710/raw/73d047f0a3ffc35f0655488547e7f24fa3f04ea6/colortrans.py'
+    url = 'https://gist.githubusercontent.com/er1kb/02f1fee3453431d5c0ccad5e62326a99/raw/73d047f0a3ffc35f0655488547e7f24fa3f04ea6/colortrans.py'
     c = requests.get(url, stream = True).content
     with open('colortrans.py', 'wb') as f:
         c = '\n'.join([l for i,l in enumerate(c.decode('utf-8').split('\n')) if i not in [320,321]])
@@ -66,12 +67,19 @@ palettes = [{'key': p} for p in cb_attrs if not p.startswith('__') and p not in 
 def colorbrewer(sheet):
     palName = vd.choose(palettes, n = 1)
     palette = getattr(cb, palName)
-    class_interval = (min(palette), max(palette))
+    min_col, max_col = min(palette), max(palette)
 
-    nClasses = int(vd.input(f'How many classes? ({class_interval[0]}-{class_interval[1]})  '))
+    attr_length = len(sheet.legends)
 
-    if nClasses < class_interval[0] or nClasses > class_interval[1]:
-        vd.fail(f'Number of classes for this palette needs to be within {class_interval}')
+    nClasses = int(vd.input(f'How many classes? {min_col}-{max_col} (Current = {attr_length})  '))
+
+    if nClasses < min_col:
+        nClasses = min_col
+        vd.status(f'Number of classes needs to be within ({min_col},{max_col}), using {min_col}.')
+
+    if nClasses > max_col:
+        nClasses = max_col
+        vd.status(f'Number of classes needs to be within ({min_col},{max_col}), using {max_col}.')
 
     rgb_list = palette[nClasses]
     rgb_values = [re.findall('[0-9]{1,3}', v) for v in rgb_list]
@@ -82,7 +90,6 @@ def colorbrewer(sheet):
     vd.option('plot_colors', plot_colors, 'list of distinct colors to use for plotting distinct objects')
     sheet.reload()
 
+
 GraphSheet.addCommand('c', 'colorbrewer', 'sheet.colorbrewer()')
 GraphSheet.addCommand(None, 'reset_colors', 'vd.option("plot_colors", "green red yellow cyan magenta white 38 136 168", "list of distinct colors to use for plotting distinct objects"); sheet.reload()')
-
-
