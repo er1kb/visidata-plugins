@@ -1,6 +1,7 @@
 My repository for [Visidata](https://github.com/saulpw/visidata) plugins. 
 
-**vd_elasticsearch** is an interface towards the [Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html) python [client](https://elasticsearch-py.readthedocs.io/en/stable/) for reading from, writing to and managing a cluster. Also includes a subset of the Elasticsearch [analyzers, tokenizers and filters](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html
+## vd_elasticsearch
+An interface towards the [Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html) python [client](https://elasticsearch-py.readthedocs.io/en/stable/) for reading from, writing to and managing a cluster. Also includes a subset of the Elasticsearch [analyzers, tokenizers and filters](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html
 ), for transforming text columns within Visidata. 
 
 
@@ -89,5 +90,6 @@ I have gone with a single capital letter for convenience, but you might opt for 
 
 
 
-~~vd_colorbrewer~~ (deprecated) adds [Colorbrewer](https://colorbrewer2.org/) scales to Visidata plotting. Improved upon by @saulpw and added to core Visidata at [features/colorbrewer.py](https://github.com/saulpw/visidata/blob/develop/features/colorbrewer.py). 
+## ~~vd_colorbrewer~~ (deprecated)
+Adds [Colorbrewer](https://colorbrewer2.org/) scales to Visidata plotting. Improved upon by @saulpw and added to core Visidata at [features/colorbrewer.py](https://github.com/saulpw/visidata/blob/develop/features/colorbrewer.py). 
 
