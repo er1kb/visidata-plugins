@@ -90,7 +90,7 @@ Please be aware that your login credentials will be fully visible inside Visidat
 
 #### At index time
 If you index a sheet called _dogs_ into Elasticsearch, the plugin will look for type mappings in a sheet named _dogs\_mappings_. If this mapping sheet does not exist, Elasticsearch will guess the types and give you default mappings. You can produce a template of type mappings by using _es-infer-mappings_ on a Visidata TableSheet. The mapping sheet is provided as key-value pairs, so you can edit the mappings in Visidata and not have to keep track of matching parentheses of the nested dict that Elasticsearch expects at index time.
-A lot of the ES and Kibana functionality depends on typing, so try and be specific by providing the mappings at index time. The same goes for index settings, contained in a sheet named _dogs\_settings_. 
+A lot of the ES and Kibana functionality depends on typing, so try and be specific by providing the mappings at index time. The same goes for index settings, optionally contained in a sheet named _dogs\_settings_. 
 
 
 ### Overview shortcut
