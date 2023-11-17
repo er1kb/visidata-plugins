@@ -12,14 +12,15 @@ You open the Elasticsearch url as if it were a filetype.
 vd http://localhost:9200 --filetype=elasticsearch
 ```
 ```
-# with environment variable and security certificate
-vd $ES_URL --filetype=elasticsearch --http-req-verify=/home/erik/elastic/elasticsearch-ca.pem
+# security enabled with username, password and certificate
+vd https://superuser:changeme@localhost:9200 --filetype=elasticsearch --http-req-verify=/home/erik/elastic/elasticsearch-ca.pem
 ```
+
+
 
 
 ### Commands
 Commands are listed below, by the type of sheet you can call them from. Please note that there are differences in terminology. In Visidata an IndexSheet is an overview, for example the SheetsSheet that lists the sheets you currently have open. In Elasticsearch terminology however, an index is an individual table. For this plugin I have tried to go with the Visidata nomenclature: an ElasticsearchSheet is what contains an individual index/table, whereas an ElasticsearchIndexSheet lists all the available indices of the cluster. This is arbitrary, as the complete opposite would have made sense as well. 
-
 
 #### BaseSheet
 _Scope: Any Visidata sheet_
@@ -30,15 +31,13 @@ _Scope: Any Visidata sheet_
 | es-read | Read from an existing index |
 
 
-
-
 #### IndexSheet
 _Scope: A Visidata index sheet_
 
 |  command | meaning |
 | --- | --- |
 | es-read | Read indices, by a common prefix |
-| es-write | Write selected sheets in bulk |
+| es-write | Write selected sheets in bulk. Needs at least one key column to be set for each sheet. |
 | setkey | Set a common key column in multiple sheets |
 | addkey | Add a common numeric key column to selected sheets, starting from 0 |
 | addkey-offset | Add a common numeric key column to selected sheets, starting from an offset of your choice |
@@ -65,6 +64,7 @@ _Scope: Any tabular sheet, whether derived from Elasticsearch or otherwise_
 
 |  command | meaning |
 | --- | --- |
+| es-write | Write table to an Elasticsearch index |
 | es-infer-mappings | Try to infer Elasticsearch mappings using Visidata column types |
 | es-tokenize | Apply an Elasticsearch tokenizer on a Visidata column, save result to a new column |
 | es-analyze | Apply an Elasticsearch analyzer on a Visidata column, save result to a new column |
@@ -80,6 +80,19 @@ _Scope: When you have fetched the mappings of an existing index, or inferred the
 | dump-mappings | Dump the mappings as json to a TextSheet |
 
 
+### Considerations
+
+### When setting up the client
+You need the Elasticsearch python client: __python -m pip install elasticsearch__. When connecting to a secure cluster, this plugin assumes that the user has sufficient privileges to read/write and monitor. 
+
+### In Visidata
+Please be aware that your login credentials will be fully visible inside Visidata, as they are part of the connection url. The url is shown in the _Statuses_ window at startup, and as part of the _Options_ ("es\_url"). This might be a problem if you are working in some kind of a shared environment. 
+
+#### At index time
+If you index a sheet called _dogs_ into Elasticsearch, the plugin will look for type mappings in a sheet named _dogs\_mappings_. If this mapping sheet does not exist, Elasticsearch will guess the types and give you default mappings. You can produce a template of type mappings by using _es-infer-mappings_ on a Visidata TableSheet. The mapping sheet is provided as key-value pairs, so you can edit the mappings in Visidata and not have to keep track of matching parentheses of the nested dict that Elasticsearch expects at index time.
+A lot of the ES and Kibana functionality depends on typing, so try and be specific by providing the mappings at index time. The same goes for index settings, contained in a sheet named _dogs\_settings_. 
+
+
 ### Overview shortcut
 If you get good use out of this plugin, you may want to add a keyboard shortcut in your .visidatarc, for accessing the overview sheet. 
 ```
@@ -91,5 +104,5 @@ I have gone with a single capital letter for convenience, but you might opt for 
 
 
 ## ~~vd_colorbrewer~~ (deprecated)
-Adds [Colorbrewer](https://colorbrewer2.org/) scales to Visidata plotting. Improved upon by @saulpw and added to core Visidata at [features/colorbrewer.py](https://github.com/saulpw/visidata/blob/develop/features/colorbrewer.py). 
+Adds [Colorbrewer](https://colorbrewer2.org/) scales to Visidata plotting. Improved upon by @saulpw and added to core Visidata at [features/colorbrewer.py](https://github.com/saulpw/visidata/blob/develop/visidata/features/colorbrewer.py). 
 
